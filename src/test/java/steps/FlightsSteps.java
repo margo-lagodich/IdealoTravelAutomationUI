@@ -26,7 +26,7 @@ public class FlightsSteps extends BaseSteps {
         flightsPage = new FlightsPage(driver);
     }
 
-    @Then("I see first 2 states are open and the rest are closed")
+    @Then("I see first 2 clusters are open and the rest are closed")
     public void checkOpenedClosedClusters(){
         int clustersNumber = flightsPage.getClustersNumber();
         for(int i=0; i<clustersNumber; i++){
@@ -41,37 +41,35 @@ public class FlightsSteps extends BaseSteps {
     }
 
     @Then("I see each cluster contain 1-3 offers")
-    public void checkIsOffersAmountInRange(){
-        int clustersAmount = flightsPage.getClustersNumber();
-        for(int i =0; i<clustersAmount; i++){
-            int a = flightsPage.getOffersNumberPerCluster(i);
-            Assert.assertTrue(a>=1 & a<=3);
+    public void checkIsOffersNumberInRange(){
+        int clustersNumber = flightsPage.getClustersNumber();
+        for(int i =0; i<clustersNumber; i++){
+            int offerNumbersPerCluster = flightsPage.getOffersNumberPerCluster(i);
+            Assert.assertTrue(offerNumbersPerCluster>=1 & offerNumbersPerCluster<=3);
         }
     }
 
-    @Then("I see total number of offers is <=30")
-    public void checkOffersAmountPageLimit(){
-        int offersAmount = flightsPage.getOffersNumberTotal();
-        Assert.assertTrue(offersAmount<=30);
+    @Then("I see total number of offers is <= 30")
+    public void checkOffersNumberPageLimit(){
+        int offersNumber = flightsPage.getOffersNumberTotal();
+        Assert.assertTrue(offersNumber<=30);
     }
 
     @Then("I click expand button for each element and check state of offers")
     public void checkClustersCanExpand(){
-        List<WebElement> clustersList = flightsPage.getClustersList();
+        int clustersNumber = flightsPage.getClustersNumber();
 
-        for(int i=0; i<clustersList.size(); i++){
+        for(int i=0; i<clustersNumber; i++){
 
             int numberOfOffers = flightsPage.getOffersNumberPerCluster(i);
             Assert.assertTrue(numberOfOffers>0);
 
             String stateBeforeClick = flightsPage.getClusterDisplayValue(i);
             if (stateBeforeClick.equals("none")) {
-                Assert.assertEquals ("none", stateBeforeClick);
                 flightsPage.expandCluster(i);
                 String stateAfterClick = flightsPage.getClusterDisplayValue(i);
                 Assert.assertEquals ("block", stateAfterClick);
             } else{
-                Assert.assertEquals ("block", stateBeforeClick);
                 flightsPage.expandCluster(i);
                 String stateAfterClick = flightsPage.getClusterDisplayValue(i);
                 Assert.assertEquals ("none", stateAfterClick);
